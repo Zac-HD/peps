@@ -251,27 +251,27 @@ One discussion proposed ``raise Exception() with "note contents"`` , but this
 does not address the original motivation of compatibility with ``ExceptionGroup`` .
 
 Furthermore, this would be an additional feature over adding the attribute and
-modifying the traceback-formatting code, and we do not expect ``__note__`` to be
-so frequently-used as to justify new syntax or even a new ``.with_note()`` method
-(analogous to ``.with_traceback()`` ).
+modifying the traceback-formatting code, and we do not believe that the added
+complexity of new language syntax is justified for the problem we are solving
+here.
 
 
 Allow any object, and cast to string for display
 ------------------------------------------------
 We have not identified any scenario where libraries would want to do anything but either
 concatenate or replace notes, and so the additional complexity and interoperability
-challenges do not seem justified.
+challenges do not seem justified at this time.
 
 Variations on this have also been proposed for forward-compatibility with a future
 structured API, but in the absence of any proposed use-case (see also "Non-goals")
-we strongly prefer to keep things simple - and note that implementing any nontrival
-future behavior would then break backwards-compatibility.
+we prefer to implement a restrictive API that can be relaxed in the future rather a
+very flexible API that will be hard to change.
 
 
 Add a helper function ``contexlib.add_exc_note()``
 --------------------------------------------------
-We don't expect notes to be used frequently enough to justify this either, but
-provide the following extensible recipe::
+
+It was suggested to add the following utility to the standard library::
 
     @contextlib.contextmanager
     def add_exc_note(note: str):
@@ -286,6 +286,9 @@ provide the following extensible recipe::
 
     with add_exc_note(f"While attempting to frobnicate {item=}"):
         frobnicate_or_raise(item)
+
+We don't believe this needs to be discussed as part of the current PEP, because
+it can be added in the future if there is concensus that it is useful in practice.
 
 
 Store notes in ``ExceptionGroup`` s
